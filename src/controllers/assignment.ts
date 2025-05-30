@@ -76,32 +76,56 @@ export async function readAssignments(
   response: Response
 ): Promise<void> {
   try {
-    const { query } = request.query;
+    const {
+      query = "",
+      filter = "",
+      page = "1",
+      status = "",
+      country,
+    } = request.query as {
+      query?: string;
+      filter?: string;
+      page?: string;
+      status?: string;
+      country: string;
+    };
+
+    const currentPage = parseInt(page) || 1;
+    const limit = 15;
+    const skip = (currentPage - 1) * limit;
+
+    // Build dynamic filter object
+    const conditions: Record<string, any> = {};
 
     if (query) {
-      const assignments = await Assignment.find({
-        $or: [
-          { title: { $regex: query, $options: "i" } },
-          { country: { $regex: query, $options: "i" } },
-          { region: { $regex: query, $options: "i" } },
-          { animal: { $regex: query, $options: "i" } },
-          { size: { $regex: query, $options: "i" } },
-          { category: { $regex: query, $options: "i" } },
-        ],
-      });
-
-      response.status(200).json({
-        success: true,
-        data: assignments,
-      });
-      return;
+      conditions.title = { $regex: query, $options: "i" };
     }
 
-    const assignments = await Assignment.find();
+    if (filter) {
+      conditions.animal = filter;
+    }
+
+    if (status === "pending") {
+      conditions.status = "pending";
+    }
+
+    if (country) {
+      conditions.country = country;
+    }
+
+    const assignments = await Assignment.find(conditions)
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+
+    const total = await Assignment.countDocuments(conditions);
 
     response.status(200).json({
       success: true,
       data: assignments,
+      total,
+      page: currentPage,
+      totalPages: Math.ceil(total / limit),
     });
   } catch (err) {
     console.error(err);

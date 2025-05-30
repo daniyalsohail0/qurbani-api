@@ -15,28 +15,32 @@ dotenv.config();
 
 async function main() {
   const app = express();
-
   const port = process.env.PORT || 8080;
-
-  app.listen(port, () => {
-    console.log(`Server running on port: ${port}`);
-  });
 
   await mongoose
     .connect(process.env.DB_URI)
     .then(() => console.log("Connected to database."))
     .catch((e) => console.error(e));
 
-  app.use(cors());
+  app.use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+    })
+  );
   app.use(cookieParser());
   app.use(morgan("dev"));
+  app.use(express.json()); // ✅ Correct placement
 
-  app.use("/api", express.json());
   app.use("/api", authRouter);
   app.use("/api", userRouter);
   app.use("/api", assignmentRouter);
   app.use("/api", customerRouter);
   app.use("/api", orderRouter);
+
+  app.listen(port, () => {
+    console.log(`Server running on port: ${port}`);
+  });
 }
 
 main();

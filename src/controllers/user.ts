@@ -27,7 +27,7 @@ export async function registerUser(
       password: hashedPassword,
       country,
       region,
-      role: "editor",
+      role: "user",
     });
 
     const accessToken = await tokenize(

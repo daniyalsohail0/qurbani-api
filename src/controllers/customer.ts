@@ -49,6 +49,8 @@ export async function getCustomers(
   response: Response
 ): Promise<void> {
   try {
+    const { search } = request.query;
+    console.log("Search query:", search);
     const customers = await Customer.find().populate("assignments");
 
     response.status(200).json({

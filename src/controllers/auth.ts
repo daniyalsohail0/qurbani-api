@@ -41,12 +41,14 @@ export async function login(
 
     response.cookie("auth", refreshToken, {
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
+      secure: false,
+      sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    response.status(200).json({ success: true, data: { token: accessToken } });
+    response
+      .status(200)
+      .json({ success: true, data: { userId: user._id, token: accessToken } });
   } catch (err) {
     console.error(err);
 
