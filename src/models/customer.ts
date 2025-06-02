@@ -16,7 +16,7 @@ const customerSchema = new Schema<Customer>(
     country: { type: String },
     namePlate: { type: String },
     assignments: [
-      { type: Schema.Types.ObjectId, ref: "assignments", default: [] },
+      { type: Schema.ObjectId, ref: "assignments", default: [] },
     ],
     transactionId: { type: String, unique: true, required: true },
     orderEmail: { type: Boolean, default: false },

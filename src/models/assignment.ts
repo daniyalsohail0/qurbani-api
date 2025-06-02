@@ -20,7 +20,7 @@ const assignmentSchema = new Schema<Assignment>(
       default: "pending",
     },
     customerId: {
-      type: Schema.Types.ObjectId,
+      type: Schema.ObjectId,
       ref: "customers",
       required: true,
     },

@@ -14,7 +14,7 @@ export interface Customer extends Document {
   postCode?: string;
   country?: string;
   namePlate?: string;
-  assignments?: Types.ObjectId[];
+  assignments?: (Types.ObjectId | Assignment)[];
   transactionId: string;
   orderEmail?: boolean;
 }

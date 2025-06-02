@@ -37,12 +37,10 @@ async function sendConfirmationEmails(): Promise<void> {
         continue;
       }
 
-      const assignments = customer.assignments as Assignment[];
-
       await sendEmail({
         to: customer.email,
         subject: "Order Confirmation",
-        html: generateOrderEmail(customer, assignments),
+        html: generateOrderEmail(customer, customer.assignments as Assignment[]),
       });
 
       customer.orderEmail = true;
