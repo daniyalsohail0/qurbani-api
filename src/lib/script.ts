@@ -3,6 +3,7 @@ import Customer from "../models/customer";
 import connectToDatabase from "./db";
 import Assignment from "../models/assignment";
 import mongoose from "mongoose";
+import { Assignment as IAssignment } from "../types/assignment";
 
 interface ExcelRow {
   SR: string;
@@ -83,7 +84,7 @@ async function runScript(): Promise<void> {
         });
 
         for (let j = 0; j < Number(data[i].Quantity); j++) {
-          const assignment = await Assignment.create({
+          const assignment: IAssignment = await Assignment.create({
             title: data[i].Project_Name,
             price: Number(data[i].Total_Price) / Number(data[i].Quantity),
             quantity: 1,
@@ -103,7 +104,7 @@ async function runScript(): Promise<void> {
         }
       } else {
         for (let j = 0; j < Number(data[i].Quantity); j++) {
-          const assignment = await Assignment.create({
+          const assignment: IAssignment = await Assignment.create({
             title: data[i].Project_Name,
             price: Number(data[i].Total_Price) / Number(data[i].Quantity),
             quantity: 1,
