@@ -1,8 +1,8 @@
 import * as XLSX from "xlsx";
 import Customer from "../models/customer";
 import connectToDatabase from "./db";
-import sendEmail from "./sendgrid";
 import Assignment from "../models/assignment";
+import mongoose from "mongoose";
 
 interface ExcelRow {
   SR: string;
@@ -43,7 +43,7 @@ interface ExcelRow {
   Notes: string;
 }
 
-export async function runScript(): Promise<void> {
+async function runScript(): Promise<void> {
   try {
     await connectToDatabase();
 
@@ -79,7 +79,6 @@ export async function runScript(): Promise<void> {
           county: data[i].Mailing_State_Province,
           country: data[i].Mailing_Country,
           postCode: data[i].Mailing_Zip_Postal_Code,
-          namePlate: data[i].name_plate,
           transactionId: data[i].Transaction_ID,
         });
 
@@ -93,11 +92,14 @@ export async function runScript(): Promise<void> {
             animal: data[i].Animal,
             size: data[i].Size,
             category: data[i].Distribute,
+            namePlate: data[i].name_plate,
             status: "pending",
             customerId: customer?.id,
           });
 
-          customer.assignments.push(assignment._id);
+          customer.assignments?.push(
+            new mongoose.Types.ObjectId(assignment._id)
+          );
         }
       } else {
         for (let j = 0; j < Number(data[i].Quantity); j++) {
@@ -110,11 +112,14 @@ export async function runScript(): Promise<void> {
             animal: data[i].Animal,
             size: data[i].Size,
             category: data[i].Distribute,
+            namePlate: data[i].name_plate,
             status: "pending",
             customerId: customer?.id,
           });
 
-          customer.assignments.push(assignment._id);
+          customer.assignments?.push(
+            new mongoose.Types.ObjectId(assignment._id)
+          );
         }
       }
 

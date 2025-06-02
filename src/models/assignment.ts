@@ -1,6 +1,7 @@
 import { Schema, model } from "mongoose";
+import { Assignment } from "../types/assignment";
 
-const assignmentSchema = new Schema(
+const assignmentSchema = new Schema<Assignment>(
   {
     title: { type: String, required: true },
     price: { type: Number, required: true },
@@ -12,6 +13,7 @@ const assignmentSchema = new Schema(
     category: { type: String },
     video: { type: String },
     images: { type: [String] },
+    namePlate: { type: String },
     status: {
       type: String,
       enum: ["pending", "completed"],

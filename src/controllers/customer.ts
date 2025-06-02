@@ -17,6 +17,7 @@ export async function createCustomer(
       county,
       postCode,
       country,
+      transactionId,
     } = request.body;
 
     const customer = await Customer.create({
@@ -30,6 +31,7 @@ export async function createCustomer(
       county,
       postCode,
       country,
+      transactionId
     });
 
     response.status(201).json({ success: true, data: customer });

@@ -9,7 +9,6 @@ import authRouter from "./routes/auth";
 import userRouter from "./routes/user";
 import assignmentRouter from "./routes/assignment";
 import customerRouter from "./routes/customer";
-import orderRouter from "./routes/order";
 
 dotenv.config();
 
@@ -36,7 +35,6 @@ async function main() {
   app.use("/api", userRouter);
   app.use("/api", assignmentRouter);
   app.use("/api", customerRouter);
-  app.use("/api", orderRouter);
 
   app.listen(port, () => {
     console.log(`Server running on port: ${port}`);
