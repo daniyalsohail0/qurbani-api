@@ -114,7 +114,8 @@ export async function logout(
 
     response.clearCookie("auth", {
       httpOnly: true,
-      sameSite: "none",
+      sameSite: "lax",
+      domain: ".alkhairqurbani.org", // ⬅️ Important for subdomain sharing
       secure: true,
     });
 
