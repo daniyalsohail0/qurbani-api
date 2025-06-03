@@ -31,10 +31,10 @@ async function main() {
   app.use(morgan("dev"));
   app.use(express.json()); // ✅ Correct placement
 
-  app.use("/api", authRouter);
-  app.use("/api", userRouter);
-  app.use("/api", assignmentRouter);
-  app.use("/api", customerRouter);
+  app.use("/v1", authRouter);
+  app.use("/v1", userRouter);
+  app.use("/v1", assignmentRouter);
+  app.use("/v1", customerRouter);
 
   app.listen(port, () => {
     console.log(`Server running on port: ${port}`);
