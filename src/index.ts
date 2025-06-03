@@ -23,7 +23,12 @@ async function main() {
 
   app.use(
     cors({
-      origin: ["http://localhost:3000", "https://qurbani-2025.vercel.app"],
+      origin: [
+        "http://localhost:3000",
+        "https://qurbani-2025.vercel.app",
+        "https://alkhairqurbani.org",
+        "https://www.alkhairqurbani.org",
+      ],
       credentials: true,
     })
   );
