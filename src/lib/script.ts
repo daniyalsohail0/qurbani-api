@@ -56,6 +56,12 @@ async function runScript(): Promise<void> {
     const data = XLSX.utils.sheet_to_json<ExcelRow>(worksheet);
 
     for (let i = 0; i < data.length; i++) {
+      if(!data[i].Contact_Email) {
+        console.log(`Skipping row ${i + 1} ${data[i].Transaction_ID} due to missing Contact_Email.`);
+        continue;
+      }
+
+
       let customer = await Customer.findOne({
         transactionId: data[i].Transaction_ID,
       });

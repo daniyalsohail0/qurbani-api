@@ -10,7 +10,7 @@ import authorization from "../middleware/authorization";
 
 const userRouter = Router();
 
-userRouter.post("/user", authorization(["admin"]), registerUser);
+userRouter.post("/user", registerUser);
 
 userRouter.get("/user", authorization(["admin"]), readUsers);
 
