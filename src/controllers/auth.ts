@@ -39,7 +39,7 @@ export async function login(
       "7d"
     );
 
-    res.cookie("auth", token, {
+    response.cookie("auth", refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: "lax", // or "none" if you're using HTTPS on both frontend/backend
