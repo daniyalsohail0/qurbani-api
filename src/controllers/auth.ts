@@ -39,11 +39,12 @@ export async function login(
       "7d"
     );
 
-    response.cookie("auth", refreshToken, {
+    res.cookie("auth", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      secure: true,
+      sameSite: "lax", // or "none" if you're using HTTPS on both frontend/backend
+      domain: ".alkhairqurbani.org", // ⬅️ Important for subdomain sharing
+      path: "/",
     });
 
     response
