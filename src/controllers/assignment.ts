@@ -91,38 +91,67 @@ export async function readAssignments(
       filter?: string;
       page?: string;
       status?: string;
-      country: string;
+      country?: string;
     };
 
     const currentPage = parseInt(page) || 1;
     const limit = 30;
     const skip = (currentPage - 1) * limit;
 
-    // Build dynamic filter object
-    const conditions: Record<string, any> = {};
-
-    if (query) {
-      conditions.title = { $regex: query, $options: "i" };
-    }
+    const matchStage: Record<string, any> = {};
 
     if (filter) {
-      conditions.animal = filter;
+      matchStage.animal = filter;
     }
 
     if (status === "pending") {
-      conditions.status = "pending";
+      matchStage.status = "pending";
     }
 
     if (country) {
-      conditions.country = country;
+      matchStage.country = country;
     }
 
-    const assignments = await Assignment.find(conditions)
-      .skip(skip)
-      .limit(limit)
-      .sort({ createdAt: -1 });
+    const queryRegex = new RegExp(query, "i");
 
-    const total = await Assignment.countDocuments(conditions);
+    const basePipeline = [
+      {
+        $lookup: {
+          from: "customers", // must match the actual MongoDB collection name
+          localField: "customerId",
+          foreignField: "_id",
+          as: "customer",
+        },
+      },
+      { $unwind: "$customer" },
+      {
+        $match: {
+          ...matchStage,
+          ...(query && {
+            $or: [
+              { title: { $regex: queryRegex } },
+              { "customer.transactionId": { $regex: queryRegex } },
+              { "customer.name": { $regex: queryRegex } },
+              { "customer.email": { $regex: queryRegex } },
+            ],
+          }),
+        },
+      },
+    ];
+
+    const assignments = await Assignment.aggregate([
+      ...basePipeline,
+      { $sort: { createdAt: -1 } },
+      { $skip: skip },
+      { $limit: limit },
+    ]);
+
+    const totalResult = await Assignment.aggregate([
+      ...basePipeline,
+      { $count: "total" },
+    ]);
+
+    const total = totalResult[0]?.total || 0;
 
     response.status(200).json({
       success: true,
@@ -133,7 +162,6 @@ export async function readAssignments(
     });
   } catch (err) {
     console.error(err);
-
     response.status(500).json({
       success: false,
       error: err instanceof Error ? err.message : err,
@@ -193,7 +221,7 @@ export async function updateAssignment(
         customer.transactionId,
         assignment.quantity,
         assignment.country,
-        assignment.region,
+        assignment.region
       ),
     });
 

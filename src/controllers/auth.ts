@@ -42,7 +42,7 @@ export async function login(
     response.cookie("auth", refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "lax", // or "none" if you're using HTTPS on both frontend/backend
+      sameSite: "lax", // Use 'lax' for subdomain sharing
       domain: ".alkhairqurbani.org", // ⬅️ Important for subdomain sharing
       path: "/",
     });
