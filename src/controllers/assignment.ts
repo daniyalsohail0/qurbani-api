@@ -86,13 +86,47 @@ export async function readAssignments(
       page = "1",
       status = "",
       country,
+      all = "false",
     } = request.query as {
       query?: string;
       filter?: string;
       page?: string;
       status?: string;
       country?: string;
+      all?: string;
     };
+
+    if (all === "true") {
+      let assignments;
+
+      if (!country) {
+        assignments = await Assignment.find().populate("customerId");
+      } else {
+        assignments = await Assignment.find({ country }).populate("customerId");
+      }
+
+      if (!assignments || assignments.length === 0) {
+        response.status(404).json({
+          success: false,
+          message: "No assignments found.",
+        });
+        return;
+      }
+
+      // Rename customerId to customer
+      const formattedAssignments = assignments.map((assignment) => {
+        const { customerId, ...rest } = assignment.toObject();
+        return {
+          ...rest,
+          customer: customerId,
+        };
+      });
+
+      response.status(200).json({
+        success: true,
+        data: formattedAssignments,
+      });
+    }
 
     const currentPage = parseInt(page) || 1;
     const limit = 30;

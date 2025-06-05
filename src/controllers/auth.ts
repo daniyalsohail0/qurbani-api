@@ -49,7 +49,7 @@ export async function login(
 
     response
       .status(200)
-      .json({ success: true, data: { userId: user._id, token: accessToken } });
+      .json({ success: true, data: { userId: user._id, role: user.role, token: accessToken } });
   } catch (err) {
     console.error(err);
 
