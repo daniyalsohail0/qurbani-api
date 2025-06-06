@@ -50,7 +50,7 @@ async function runScript(): Promise<void> {
 
     console.log("Script is running...");
 
-    const workbook = XLSX.readFile("./gaza-data.csv");
+    const workbook = XLSX.readFile("./gaza-4.csv");
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
     const data = XLSX.utils.sheet_to_json<ExcelRow>(worksheet);
