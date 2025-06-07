@@ -50,17 +50,24 @@ async function runScript(): Promise<void> {
 
     console.log("Script is running...");
 
-    const workbook = XLSX.readFile("./gaza-4.csv");
+    const workbook = XLSX.readFile("./data-7th.csv");
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
     const data = XLSX.utils.sheet_to_json<ExcelRow>(worksheet);
 
     for (let i = 0; i < data.length; i++) {
-      if(!data[i].Contact_Email) {
-        console.log(`Skipping row ${i + 1} ${data[i].Transaction_ID} due to missing Contact_Email.`);
+      if (!data[i].Contact_Email) {
+        console.log(
+          `Skipping row ${i + 1} ${
+            data[i].Transaction_ID
+          } due to missing Contact_Email.`
+        );
         continue;
       }
 
+      if (!data[i].Transaction_ID) {
+        continue;
+      }
 
       let customer = await Customer.findOne({
         transactionId: data[i].Transaction_ID,

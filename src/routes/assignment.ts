@@ -22,7 +22,6 @@ assignmentRouter.get("/assignment/:id", readAssignment);
 
 assignmentRouter.put(
   "/assignment/:id",
-  authorization(["admin", "user"]),
   updateAssignment
 );
 
